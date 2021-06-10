@@ -38,6 +38,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     // Route::delete('/video/{id}', [VideoController::class, 'deleteVideo']);
     Route::post('/video/{id}/comment', [CommentController::class, 'createComment']);
     Route::put('/video/{id}', [VideoController::class, 'updateVideo']);
+    Route::get('/video/{id}/comments', [CommentController::class, 'showVideoComments']);
 });
 
 // Route::group([

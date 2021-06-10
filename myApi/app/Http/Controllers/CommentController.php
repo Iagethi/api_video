@@ -32,19 +32,20 @@ class CommentController extends Controller
     }
 
     public function showVideoComments(Request $request, $id) {
-        $validator = Validator::make($request->all(), [
-            'body' => 'required|string|between:1,250',
-        ]);
 
-        if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
-        }
+        $comments = Comment::all();
+        $comments = $comments->intersect(Comment::whereIn('video_id', [$id])->get());
 
-        $comment = Comment::create($validator->validated());
-
+        if (count($comments) <= 0) {
         return response()->json([
-            'message' => 'User successfully registered',
-            'data' => $comment
-        ], 201);
+            "success" => false,
+            "message" => "comment not found."
+            ], 404);
+        }
+        return response()->json([
+            "success" => true,
+            "message" => "comment retrieved successfully.",
+            "data" => $comments
+            ], 201);
     }
 }

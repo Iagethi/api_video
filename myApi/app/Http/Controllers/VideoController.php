@@ -12,7 +12,7 @@ class VideoController extends Controller
     public function videoUpload(Request $req, $id){
         $validator = Validator::make($req->all(), [
             'name' => 'required|string|max: 100',
-            'source' => 'required|mimes:csv,txt,xlx,xls,pdf|max:2048'
+            'source' => 'required|mimes:avi,mkv,mp4,m4v,mov,qt,flv,asf'
         ]);
 
         if($validator->fails()){
@@ -109,7 +109,7 @@ class VideoController extends Controller
             ], 404);
         }
 
-    // unlink(storage_path('app\\public\\uploads\\'.$video->name));
+    unlink(storage_path('app\\public\\uploads\\'.$video->source));
     $video->delete();
 
     return response()->json([

@@ -19,7 +19,7 @@ class CreateVideosTable extends Migration
             $table->integer('duration')->nullable();
             $table->unsignedInteger('user_id');
             $table->string('source');
-            $table->integer('view');
+            $table->integer('view')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
         });
