@@ -26,7 +26,7 @@ class VideoController extends Controller
             $filePath = $req->file('source')->storeAs('uploads', $fileName, 'public');
 
             $fileModel->name = $req->name;
-            $fileModel->source = '/storage/' . $filePath;
+            $fileModel->source = 'app/public/' .$filePath;
             $fileModel->user_id = $id;
             $fileModel->save();
 
@@ -99,7 +99,7 @@ class VideoController extends Controller
    public function deleteVideo($id) {
 
     $video = Video::find($id);
-    $dataVideo =Video::find($id);
+    $path = str_replace('/','\\',$video->source);
 
     // dd($video);
     if (is_null($video)) {
@@ -109,13 +109,20 @@ class VideoController extends Controller
             ], 404);
         }
 
-    unlink(storage_path('app\\public\\uploads\\'.$video->source));
-    $video->delete();
+    if(is_file($path)) {
 
-    return response()->json([
-        "success" => true,
-        "message" => "video deleted successfully.",
-        "data" => $dataVideo
-        ], 204);
+        unlink(storage_path($path));
+        $video->delete();
+        return response()->json([
+            "success" => true,
+            "message" => "video deleted successfully.",
+            ], 204);
+    } else {
+        return response()->json([
+            "success" => false,
+            "message" => "file do not exist.",
+            ], 404);
+    }
+
 }
 }
