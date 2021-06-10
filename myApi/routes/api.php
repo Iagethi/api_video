@@ -37,6 +37,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/user/{id}/video', [VideoController::class, 'videoUpload'])->name('fileUpload');
     // Route::delete('/video/{id}', [VideoController::class, 'deleteVideo']);
     Route::post('/video/{id}/comment', [CommentController::class, 'createComment']);
+    Route::put('/video/{id}', [VideoController::class, 'updateVideo']);
 });
 
 // Route::group([

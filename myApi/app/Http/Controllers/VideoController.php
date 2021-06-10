@@ -74,6 +74,28 @@ class VideoController extends Controller
         'data'=> $videos    ], 200);
    }
 
+   public function updateVideo(Request $request, $id)
+   {
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max: 100',
+    ]);
+
+    if($validator->fails()){
+        return response()->json($validator->errors()->toJson(), 400);
+    }
+
+       $video = Video::find($id);
+       $video->name = $request->name;
+        // dd($video);
+       $video->update();
+
+       return response()->json([
+        "success" => true,
+        "message" => "user retrieved successfully.",
+        "data" => $video
+        ], 200);
+   }
+
    public function deleteVideo($id) {
 
     $video = Video::find($id);
