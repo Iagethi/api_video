@@ -18,9 +18,6 @@ use App\Http\Controllers\CommentController;
 |
 */
 
-// Route::get('/upload-file', [VideoUpload::class, 'createForm']);
-
-
 
 Route::post('/user', [AuthController::class, 'register']);
 Route::post('/auth', [AuthController::class, 'login']);
@@ -41,14 +38,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/video/{id}/comments', [CommentController::class, 'showVideoComments']);
 });
 
-// Route::group([
-//     'middleware' => 'api',
-//     'prefix' => 'auth'
 
-// ], function ($router) {
-//     // Route::post('/login', [AuthController::class, 'login']);
-//     // Route::post('/register', [AuthController::class, 'register']);
-//     // Route::post('/logout', [AuthController::class, 'logout']);
-//     // Route::post('/refresh', [AuthController::class, 'refresh']);
-//     Route::get('/user-profile', [AuthController::class, 'userProfile']);
-// });
+Route::fallback(function(){
+    return response()->json(['message' => 'Not Found!'], 404);
+});
+

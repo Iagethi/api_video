@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Video;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class VideoController extends Controller
 {
     public function videoUpload(Request $req, $id){
+
         $validator = Validator::make($req->all(), [
             'name' => 'required|string|max: 100',
             'source' => 'required|mimes:avi,mkv,mp4,m4v,mov,qt,flv,asf'
@@ -17,6 +19,15 @@ class VideoController extends Controller
 
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $user = User::find($id);
+
+        if(is_null($user)) {
+            return response()->json([
+                "success" => true,
+                "message" => "User not found.",
+                ], 404);
         }
 
         $fileModel = new Video;
@@ -41,7 +52,7 @@ class VideoController extends Controller
         return response()->json([
             "success" => false,
             "message" => "Video not uploaded.",
-            ], 201);
+            ], 400);
 
    }
 
