@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Video extends Model
+class Comment extends Model
 {
     use HasFactory;
 
@@ -15,16 +15,14 @@ class Video extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'duration',
-        'source',
+        'body'
     ];
 
     public function user() {
         $this->belongsTo(User::class, 'user_id');
     }
 
-    public function comments() {
-        return $this->hasMany(Comment::class);
+    public function comment() {
+        $this->belongsTo(Video::class, 'video_id');
     }
 }
