@@ -25,14 +25,12 @@ Route::get('/users', [UserController::class, 'showAll']);
 Route::get('/videos', [VideoController::class, 'showAllVideo']);
 Route::get('/user/{id}/videos', [VideoController::class, 'showVideoOfUser']);
 
-Route::delete('/video/{id}', [VideoController::class, 'deleteVideo']);
-
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/user/{id}', [UserController::class, 'show']);
     Route::put('/user/{id}', [UserController::class, 'updateUser']);
     Route::delete('/user/{id}', [UserController::class, 'deleteUser']);
     Route::post('/user/{id}/video', [VideoController::class, 'videoUpload'])->name('fileUpload');
-    // Route::delete('/video/{id}', [VideoController::class, 'deleteVideo']);
+    Route::delete('/video/{id}', [VideoController::class, 'deleteVideo']);
     Route::post('/video/{id}/comment', [CommentController::class, 'createComment']);
     Route::put('/video/{id}', [VideoController::class, 'updateVideo']);
     Route::get('/video/{id}/comments', [CommentController::class, 'showVideoComments']);
