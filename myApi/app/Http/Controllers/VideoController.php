@@ -7,6 +7,7 @@ use App\Models\Video;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class VideoController extends Controller
 {
@@ -72,17 +73,50 @@ class VideoController extends Controller
         }
         return response()->json([
             "success" => true,
-            "message" => "user retrieved successfully.",
+            "message" => "video retrieved successfully.",
             "data" => $videos
             ], 200);
    }
 
-   public function showAllVideo() {
+    /**
+     * Show Videos.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+   public function showAllVideo(Request $request) {
+    $videos = DB::table('videos');
+    if ($request->has("name"))
+        $videos = $videos->where("name", $request->get("name"));
+    if ($request->has("user"))
+        $videos = $videos->where("user", $request->get("user"));
+    if ($request->has("duration"))
+        $videos = $videos->where("duration", $request->get("duration"));
 
-        $videos = Video::all();
-        return response()->json([
-        'message'=> 'Ok',
-        'data'=> $videos    ], 200);
+    $pagination = $videos->Paginate($request->has("perPage") ? $request->get("perPage") : 5);
+
+    // dd($request->all());
+    if ($request->has("page"))
+        if ($request->get("page") == 0 || $request->get("page") > $pagination->lastPage())
+            return response()->json(null, 400);
+        // dd($request->page);
+        $toRender = [];
+        foreach ($pagination->items() as $vid) {
+            array_push($toRender, (Video::find($vid->id)));
+        }
+
+    return response()->json([
+        'message' => 'OK',
+        'data' => $toRender,
+        "pager" => collect([
+            "current" => $pagination->currentPage(),
+            "total" => $pagination->lastPage()
+        ])
+    ], 200);
+
+        // $videos = Video::all();
+        // return response()->json([
+        // 'message'=> 'Ok',
+        // 'data'=> $videos    ], 200);
    }
 
    public function updateVideo(Request $request, $id)

@@ -117,7 +117,7 @@ class UserController extends Controller
             }
 
         $request->password = Hash::make($request->password);
-        dd($request->all());
+        // dd($request->all());
         $user->update($request->all());
 
         return response()->json([
