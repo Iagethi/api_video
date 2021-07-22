@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\VideoFormatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,8 +25,9 @@ Route::post('/auth', [AuthController::class, 'login']);
 Route::get('/users', [UserController::class, 'showAll']);
 Route::get('/videos', [VideoController::class, 'showAllVideo']);
 Route::get('/user/{id}/videos', [VideoController::class, 'showVideoOfUser']);
+Route::patch('/video/{id}', [VideoFormatController::class, 'encode']);
 
-Route::group(['middleware' => ['jwt.verify']], function() {
+Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/user/{id}', [UserController::class, 'show']);
     Route::put('/user/{id}', [UserController::class, 'updateUser']);
     Route::delete('/user/{id}', [UserController::class, 'deleteUser']);
@@ -37,7 +39,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 });
 
 
-Route::fallback(function(){
+Route::fallback(function () {
     return response()->json(['message' => 'Not Found!'], 404);
 });
-
